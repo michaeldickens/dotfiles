@@ -1,0 +1,43 @@
+"
+" My stuff
+"
+
+" Insert
+noremap i <S-Esc>
+
+" Goto last tab
+noremap ge g$
+
+
+"
+" Modified from https://gist.github.com/avendael/7028513
+"
+    
+" Show pattern matches as you type
+set incsearch
+ 
+" Hilight previous search pattern matches
+set hlsearch
+
+" Use C-v and M-v for jump scrolling
+" noremap <C-v> <C-f>
+" noremap <A-v> <C-b>
+
+" Goto the top of the document with M-<
+noremap <A-<> gg
+ 
+" Goto the end of the document with M->
+noremap <A->> G
+
+" Use C-s and C-r for searching (n/N for next/prev as in less)
+noremap <C-s> /
+noremap <C-r> ?
+
+" C-g as cancel (C-q is stop)
+cmap <C-g> <Esc>
+imap <C-g> <Esc>
+noremap <C-g> <Esc>
+
+" Buffer lists with C-x b and C-x C-b
+noremap <C-x>b b
+noremap <C-x><C-b> B
