@@ -75,6 +75,7 @@ bind r:${slate-mod} ${2-right}
 bind t:${slate-mod} ${2-same}
 
 # Resize bindings
+<<<<<<< HEAD
 bind right:${slate-mod} resize +8% +0
 bind left:${slate-mod}  resize -8% +0
 bind up:${slate-mod}    resize +0 -8%

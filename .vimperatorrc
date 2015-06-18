@@ -20,6 +20,7 @@ set incsearch
 set hlsearch
 
 " Use C-v and M-v for jump scrolling
+<<<<<<< HEAD
 noremap <C-v> <C-f>
 noremap <A-v> <C-b>
 
@@ -37,6 +38,7 @@ noremap <A->> G
 noremap <C-s> /
 noremap <C-r> ?
 
+<<<<<<< HEAD
 " Change tabs with Shift-LEFT|RIGHT.
 noremap <S-left> <C-p>
 noremap <S-right> <C-n>
