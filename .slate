@@ -1,0 +1,108 @@
+#
+# Slate configuration file
+#
+# Author: Michael Dickens
+# Date: 2013-11-19
+#
+# Adapted from the .slate file described by Tristan Hume:
+# http://thume.ca/howto/2012/11/19/using-slate/#configuration
+
+# Modifier keys used by Slate
+alias slate-mod ctrl;alt;cmd
+alias slate-mod-2 shift;ctrl;alt;cmd
+
+# Configs
+config defaultToCurrentScreen true
+config nudgePercentOf screenSize
+config resizePercentOf screenSize
+config secondsBetweenRepeat 0.1
+config checkDefaultsOnLoad true
+config focusCheckWidthMax 3000
+config windowHintsShowIcons true
+config windowHintsIgnoreHiddenWindows false
+#config windowHintsDuration 5
+config windowHintsSpread true
+#config windowHintsOrder persist
+
+# Monitor Aliases
+alias mon-laptop      0
+alias mon-external    1
+
+# Abstract positions
+alias full          move screenOriginX;screenOriginY                  screenSizeX;screenSizeY
+alias lefthalf      move screenOriginX;screenOriginY                  screenSizeX/2;screenSizeY
+alias righthalf     move screenOriginX+screenSizeX/2;screenOriginY    screenSizeX/2;screenSizeY
+alias rightmost     move screenOriginX+screenSizeX*0.4;screenOriginY  screenSizeX*0.6;screenSizeY
+alias rightless     move screenOriginX+screenSizeX*0.6;screenOriginY  screenSizeX*0.4;screenSizeY
+alias leftmost      move screenOriginX;screenOriginY                  screenSizeX*0.6;screenSizeY
+alias leftless      move screenOriginX;screenOriginY                  screenSizeX*0.4;screenSizeY
+# Concrete positions
+alias 1-full        move screenOriginX;screenOriginY screenSizeX;screenSizeY         ${mon-laptop}
+alias 1-left        move screenOriginX;screenOriginY screenSizeX/2;screenSizeY         ${mon-laptop}
+alias 1-right       move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY         ${mon-laptop}
+alias 1-same        move windowTopLeftX;windowTopLeftY windowSizeX;windowSizeY        ${mon-laptop}
+alias 2-full        move screenOriginX;screenOriginY screenSizeX;screenSizeY         ${mon-external}
+alias 2-left        move screenOriginX;screenOriginY screenSizeX/2;screenSizeY         ${mon-external}
+alias 2-right       move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY         ${mon-external}
+alias 2-same        move windowTopLeftX;windowTopLeftY windowSizeX;windowSizeY        ${mon-external}
+alias 2-righttop    move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY/2       ${mon-external}
+alias 2-rightbottom move screenOriginX+screenSizeX/2;screenOriginY+screenSizeY/2    screenSizeX/2;screenSizeY/2       ${mon-external}
+
+# 1 Monitor layout
+layout 1monitor 'iTerm':MAIN_FIRST ${1-left}
+layout 1monitor 'Emacs':MAIN_FIRST ${1-full}
+
+# 2 Monitor layout
+layout 2monitors 'iTerm':MAIN_FIRST ${2-left}
+layout 2monitors 'Firefox':MAIN_FIRST ${1-full}
+layout 2monitors 'Conkeror':MAIN_FIRST ${1-full}
+layout 2monitors 'Emacs':MAIN_FIRST ${2-full}
+
+# Default Layouts
+default 2monitors resolutions:${mon-laptop};${mon-external};
+default 1monitor  resolutions:${mon-laptop}
+
+# Location bindings
+bind s:${slate-mod} ${1-left}
+bind d:${slate-mod} ${1-full}
+bind f:${slate-mod} ${1-right}
+bind g:${slate-mod} ${1-same}
+
+# Switch monitors
+bind w:${slate-mod} ${2-left}
+bind e:${slate-mod} ${2-full}
+bind r:${slate-mod} ${2-right}
+bind t:${slate-mod} ${2-same}
+
+# Resize bindings
+bind right:${slate-mod} resize +8% +0
+bind left:${slate-mod}  resize -8% +0
+bind up:${slate-mod}    resize +0 -8%
+bind down:${slate-mod}  resize +0 +8%
+
+# Nudge bindings
+bind right:${slate-mod-2} nudge +8% +0
+bind left:${slate-mod-2} nudge -8% +0
+bind up:${slate-mod-2} nudge +0 -8%
+bind down:${slate-mod-2} nudge +0 +8%
+
+# Application bindings
+bind a:${slate-mod-2} focus 'Amphetype'
+bind b:${slate-mod-2} focus 'Bean'
+bind c:${slate-mod-2} focus 'Google Chrome'
+bind d:${slate-mod-2} focus 'Finder'
+bind e:${slate-mod-2} focus 'Emacs'
+bind f:${slate-mod-2} focus 'Firefox'
+bind g:${slate-mod-2} focus 'Messenger'
+bind i:${slate-mod-2} focus 'iTunes'
+bind k:${slate-mod-2} focus 'Conkeror'
+bind m:${slate-mod-2} focus 'Microsoft Outlook'
+bind p:${slate-mod-2} focus 'Preview'
+bind s:${slate-mod-2} focus 'Messages'
+bind t:${slate-mod-2} focus 'iTerm'
+bind w:${slate-mod-2} focus 'Microsoft Word'
+bind x:${slate-mod-2} focus 'KeePassX'
+bind y:${slate-mod-2} focus 'Spotify'
+
+# Window hints
+bind h:${slate-mod} hint ASDFJKL;QWERUIOP
