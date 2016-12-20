@@ -1,37 +1,40 @@
 -- TODO: Use bg.grid.pushwindows_[direction] to move window instead of nudge and expand. The way I do it now doesn't fit to a grid. See Dash documentation.
 
-local application = require "mjolnir.application"
-local grid = require "mjolnir.bg.grid"
-local hotkey = require "mjolnir.hotkey"
-local window = require "mjolnir.window"
-local screen = require "mjolnir.screen"
-local fnutils = require "mjolnir.fnutils"
-
-key1 = {"cmd", "alt", "ctrl"}
-key2 = {"cmd", "alt", "ctrl", "shift"}
+key1 = {}
+key2 = {"shift"}
 
 -- A global variable for the Hyper Mode
-hyper = hotkey.modal.new({}, "F17")
+hyper = hs.hotkey.modal.new({}, "F17")
 
--- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
+-- For if you hit shift before hitting hyper
+hyper2 = hs.hotkey.modal.new({}, "F16")
+
 pressedF18 = function()
   hyper:enter()
 end
 
--- Leave Hyper Mode when F18 (Hyper/Capslock) is pressed
 releasedF18 = function()
   hyper:exit()
 end
 
+pressedShiftF18 = function()
+  hyper2:enter()
+end
+
+releasedShiftF18 = function()
+  hyper2:exit()
+end
+
 -- Bind the Hyper key
-f18 = hotkey.bind({}, 'F18', pressedF18, releasedF18)
+hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
+hs.hotkey.bind({"shift"}, 'F18', pressedShiftF18, releasedShiftF18)
 
-grid.MARGINX = 0
-grid.MARGINY = 0
-grid.GRIDWIDTH = 2
-grid.GRIDHEIGHT = 2
+hs.grid.MARGINX = 0
+hs.grid.MARGINY = 0
+hs.grid.GRIDWIDTH = 2
+hs.grid.GRIDHEIGHT = 2
 
-screens = screen.allscreens()
+screens = hs.screen.allScreens()
 screen1 = screens[1]
 screen2 = screens[2]
 
@@ -39,8 +42,8 @@ screen2 = screens[2]
 -- current window to a certain grid size.
 local gridset = function(target_screen, x, y, w, h)
    return function()
-      cur_window = window.focusedwindow()
-      grid.set(
+      cur_window = hs.window.focusedWindow()
+      hs.grid.set(
          cur_window,
          {x=x, y=y, w=w, h=h},
          target_screen
@@ -56,30 +59,22 @@ local gridset2 = function(x, y, w, h)
    return gridset(screen2, x, y, w, h)
 end
 
-hotkey.bind(key1, 's', gridset1(0, 0, 1, 2)) -- left half
-hotkey.bind(key1, 'd', gridset1(0, 0, 2, 2))
-hotkey.bind(key1, 'f', gridset1(1, 0, 1, 2)) -- right half
-
-hotkey.bind(key1, 'w', gridset2(0, 0, 1, 2)) -- left half
-hotkey.bind(key1, 'e', gridset2(0, 0, 2, 2))
-hotkey.bind(key1, 'r', gridset2(1, 0, 1, 2)) -- right half
-
 nudgeDistance = 720 / 6
 
 expand = function(dw, dh)
-   local win = window.focusedwindow()
+   local win = hs.window.focusedWindow()
    local f = win:frame()
    f.w = f.w + dw
    f.h = f.h + dh
-   win:setframe(f)
+   win:setFrame(f)
 end
 
 nudge = function(dx, dy)
-   local win = window.focusedwindow()
+   local win = hs.window.focusedWindow()
    local f = win:frame()
    f.x = f.x + dx
    f.y = f.y + dy
-   win:setframe(f)
+   win:setFrame(f)
 end
 
 expandLeft = function()
@@ -114,18 +109,35 @@ nudgeDown = function()
    nudge(0, nudgeDistance)
 end
 
-hotkey.bind(key1, "left", expandLeft)
-hotkey.bind(key1, "right", expandRight)
-hotkey.bind(key1, "up", expandUp)
-hotkey.bind(key1, "down", expandDown)
+function key1_bind(letter, action)
+   hyper:bind(key1, letter, nil, action)
+end
 
-hotkey.bind(key2, "left", nudgeLeft)
-hotkey.bind(key2, "right", nudgeRight)
-hotkey.bind(key2, "up", nudgeUp)
-hotkey.bind(key2, "down", nudgeDown)
+function key2_bind(letter, action)
+   hyper:bind(key2, letter, nil, action)
+   hyper2:bind(key2, letter, nil, action)
+end
+
+key1_bind('s', gridset1(0, 0, 1, 2)) -- left half
+key1_bind('d', gridset1(0, 0, 2, 2))
+key1_bind('f', gridset1(1, 0, 1, 2)) -- right half
+
+key1_bind('w', gridset2(0, 0, 1, 2)) -- left half
+key1_bind('e', gridset2(0, 0, 2, 2))
+key1_bind('r', gridset2(1, 0, 1, 2)) -- right half
+
+key1_bind("left", expandLeft)
+key1_bind("right", expandRight)
+key1_bind("up", expandUp)
+key1_bind("down", expandDown)
+
+key2_bind("left", nudgeLeft)
+key2_bind("right", nudgeRight)
+key2_bind("up", nudgeUp)
+key2_bind("down", nudgeDown)
 
 function focus(letter, name)
-   hyper:bind(key2, letter, function () application.launchorfocus(name) end)
+   key2_bind(letter, function () hs.application.launchOrFocus(name) end)
 end
 
 focus('a', 'Activity Monitor')
@@ -143,6 +155,10 @@ focus('p', 'Preview')
 focus('s', 'Messages')
 focus('t', 'iTerm')
 focus('v', 'VMWare Fusion')
-focus('w', 'Microsoft Word')
+focus('w', 'Trader Workstation')
 focus('x', 'Microsoft Excel')
 focus('y', 'Spotify')
+
+
+-- Paste for websites that disable normal paste
+hs.hotkey.bind({"cmd", "alt"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)

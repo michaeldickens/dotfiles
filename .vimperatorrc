@@ -46,3 +46,12 @@ noremap <C-g> <Esc>
 " Buffer lists with C-x b and C-x C-b
 noremap <C-x>b b
 noremap <C-x><C-b> B
+
+set hintchars=sdfalkjcvghmweroiu
+highlight Hint font-size:150%;color:yellow;background-color:red;padding:2px;
+
+" Disable Vimperator on some sites.
+" See http://stackoverflow.com/questions/14271624/disable-vimperator-temporarily
+autocmd LocationChange .*                      js modes.passAllKeys = false
+autocmd LocationChange mail\\.google\\.com     js modes.passAllKeys = true
+autocmd LocationChange reddit\\.com            js modes.passAllKeys = true
